@@ -2,6 +2,9 @@ const { app, BrowserWindow, dialog } = require('electron');
 const path = require('path');
 var ipc = require('electron').ipcMain;
 
+const csv = require('fast-csv');
+const fs = require('fs');
+
 var mainWindow = null
 
 ipc.on('close-main-window', ()=> {
@@ -66,7 +69,38 @@ ipc.on('open-file-dialog-for-file', (event) => {
     ]
   }).then(files => {
     if (!files.canceled && files.filePaths.length > 0) {
-      event.sender.send('selected-file', files.filePaths[0]);
+
+      // reading contents of csv file
+
+      try {
+
+        // reading the csv data from the user
+        var csvFileData = [];
+        fs.createReadStream(files.filePaths[0])
+          .pipe(csv.parse({ headers: true }))
+          .on('error', error => console.error(error))
+          .on('data', row => {
+            csvFileData.push(row);
+          })
+          .on('end', (rowCount) => {
+
+            console.log(`Parsed ${rowCount} rows`);
+            // console.log(csvFileData);
+            
+            // Sending the data to the renderer process
+            event.sender.send('selected-file', {
+              path: files.filePaths[0],
+              data: csvFileData
+            });
+
+          });
+          
+
+      }
+      catch (e) {
+        console.log('Error in reading file', e);
+      }
+
     }
   });
 
