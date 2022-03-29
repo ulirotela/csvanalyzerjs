@@ -20,8 +20,8 @@ if (require('electron-squirrel-startup')) {
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1280,
+    height: 720,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
@@ -85,7 +85,6 @@ ipc.on('open-file-dialog-for-file', (event) => {
           .on('end', (rowCount) => {
 
             console.log(`Parsed ${rowCount} rows`);
-            // console.log(csvFileData);
             
             // Sending the data to the renderer process
             event.sender.send('selected-file', {
