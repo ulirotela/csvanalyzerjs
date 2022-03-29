@@ -17,6 +17,39 @@
       <button class="btn waves-effect blue" id="upload">Upload CSV</button>
       <p id="file_uploaded"></p>
 
+      <!--controls rendering-->
+      <div class="table-controls hide">
+
+        <div class="row">
+          
+          <!--Filtering by constituency-->
+          <div class="col s4">
+            <label for="const_name">Filter by constituency</label>
+            <select name="const_name" class="browser-default" id="const_name">
+              <option value="-1">Select constituency</option>
+            </select>
+          </div>
+
+          <!--Filtering by first name-->
+          <div class="col s4">
+            <label for="first_name">Filter by first name</label>
+            <select name="first_name" class="browser-default" id="first_name">
+              <option value="-1">Select first name</option>
+            </select>
+          </div>
+
+          <!--Filtering by last name-->
+          <div class="col s4">
+            <label for="last_name">Filter by last name</label>
+            <select name="last_name" class="browser-default" id="last_name">
+              <option value="-1">Select last name</option>
+            </select>
+          </div>
+
+        </div>
+
+      </div>
+
       <!-- for rendering the parsed data -->
       <div class="table-container" style="max-width: 100%; overflow: scroll;">
         <table id="file_data"></table>
