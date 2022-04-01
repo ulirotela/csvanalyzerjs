@@ -6,6 +6,9 @@
     <link rel="stylesheet" href="index.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js" integrity="sha256-ErZ09KkZnzjpqcane4SCyyHsKAXMvID9/xwbl/Aq1pc=" crossorigin="anonymous"></script>
+  
   </head>
   <body>
 
@@ -49,6 +52,9 @@
         </div>
 
       </div>
+
+      <!--for displaying the charts-->
+      <canvas id="chart" width="400" height="400" class="hide"></canvas>
 
       <!-- for rendering the parsed data -->
       <div class="table-container" style="max-width: 100%; overflow: scroll;">

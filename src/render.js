@@ -6,6 +6,8 @@ var tableIncrement = 5;
 
 var global_file_details = null;
 
+var analysisChart = null;
+
 buttonCreated.addEventListener('click', (event) => {
     ipc.send('open-file-dialog-for-file')
 });
@@ -36,6 +38,7 @@ var globalFilters = {
 
 constFilter.addEventListener('change', (event)=> {
     globalFilters.constName = event.target.value;
+    if (globalFilters.constName != '-1') renderChart()
     renderTable();
 });
 
@@ -165,5 +168,88 @@ const getTableRow = (row) => {
     table_row += `</tr>`;
 
     return table_row;
+
+}
+
+const renderChart = () => {
+
+    const ctx = document.getElementById('chart');
+    ctx.classList.remove('hide');
+
+    if (analysisChart) analysisChart.destroy();
+
+    // get all electables
+    labels = filterData(global_file_details).map(fd => {
+        return {
+            name: fd['Candidate First Name'] + " " + fd['Candidate surname'],
+            votes: parseInt(fd['Votes'])
+        }
+    });
+
+    // sum their votes
+    vote_count = []
+    labels.forEach(l => {
+
+        // check if l is in vote_count
+        let exists = vote_count.filter( vc => vc.name == l.name )
+        if (exists.length > 0) {
+
+            let prev_idx = -1;
+            vote_count.forEach((vc, idx) => {
+
+                if (vc.name == l.name) {
+                    prev_idx = idx;
+                }
+
+            });
+
+            vote_count[prev_idx].votes += l.votes;
+
+        }
+        else {
+
+            vote_count.push(l);
+
+        }
+
+    });
+
+    // sort them by vote
+    vote_count.sort((a, b) => b.votes - a.votes);
+
+    analysisChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels:  vote_count.map(vc => vc.name),
+            datasets: [{
+                label: '# of Votes',
+                data: vote_count.map(vc => vc.votes),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
 
 }
